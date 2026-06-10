@@ -1,0 +1,1618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#10b981">
+<meta name="description" content="Complete daily tasks, watch ads and earn real rewards">
+<title>Daily Task Earn Rewards</title>
+<link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiRGFpbHkgVGFzayBFYXJuIFJld2FyZHMiLCJzaG9ydF9uYW1lIjoiRGFpbHlUYXNrIiwic3RhcnRfdXJsIjoiLi8iLCJkaXNwbGF5Ijoic3RhbmRhbG9uZSIsImJhY2tncm91bmRfY29sb3IiOiIjZjFmNXM5IiwidGhlbWVfY29sb3IiOiIjMTBiOTgxIiwib3JpZW50YXRpb24iOiJwb3J0cmFpdCIsImljb25zIjpbeyJzcmMiOiJodHRwczovL2Nkbmljb25zLXBuZy5mbGF0aWNvbi5jb20vNTEyLzMxMzUvMzEzNTcxNS5wbmciLCJzaXplcyI6IjUxMng1MTIiLCJ0eXBlIjoiaW1hZ2UvcG5nIiwicHVycG9zZSI6ImFueSBtYXNrYWJsZSJ9XX0=">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root { --primary: #10b981; --primary-dark: #059669; --secondary: #f59e0b; --accent: #ef4444; --dark: #0f172a; --light: #f8fafc; --gray: #64748b; --card-bg: #ffffff; --bg: #f1f5f9; }
+html, body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--bg); min-height: 100vh; color: #1e293b; overflow-x: hidden; padding-bottom: 70px; }
+.hidden { display: none !important; }
+
+/* SPLASH */
+.splash-screen { position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 10000; background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.5s ease; }
+.splash-screen.fade-out { opacity: 0; pointer-events: none; }
+.splash-logo { width: 100px; height: 100px; background: linear-gradient(135deg, var(--primary), var(--secondary)); border-radius: 28px; display: flex; align-items: center; justify-content: center; font-size: 48px; color: #fff; margin-bottom: 24px; box-shadow: 0 8px 40px rgba(16, 185, 129, 0.4); animation: pulse 2s infinite; }
+.splash-title { font-size: 28px; font-weight: 800; color: #fff; margin-bottom: 8px; text-align: center; }
+.splash-subtitle { color: #94a3b8; font-size: 14px; text-align: center; margin-bottom: 40px; }
+.splash-loader { width: 40px; height: 40px; border: 3px solid rgba(16, 185, 129, 0.2); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+
+/* SETUP */
+.setup-screen { position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 9999; background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%); display: flex; flex-direction: column; padding: 20px; overflow-y: auto; }
+.setup-header { text-align: center; padding: 40px 0 20px; }
+.setup-header h2 { font-size: 24px; font-weight: 800; color: #fff; margin-bottom: 8px; }
+.setup-header p { color: #94a3b8; font-size: 14px; }
+.progress-bar { display: flex; justify-content: center; gap: 8px; margin-bottom: 20px; }
+.progress-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.3); }
+.progress-dot.active { background: var(--primary); }
+.country-grid, .lang-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 10px 0; }
+.country-card, .lang-card { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 16px; padding: 16px; text-align: center; cursor: pointer; transition: all 0.3s; color: #fff; }
+.country-card:hover, .country-card.selected, .lang-card:hover, .lang-card.selected { background: rgba(16, 185, 129, 0.2); border-color: var(--primary); }
+.country-card .flag { font-size: 36px; margin-bottom: 8px; display: block; }
+.country-card .name { font-size: 14px; font-weight: 600; }
+.lang-card i { font-size: 24px; margin-bottom: 8px; display: block; color: var(--secondary); }
+.lang-card .name { font-size: 14px; font-weight: 600; }
+.name-form { width: 100%; max-width: 340px; margin: 0 auto; padding: 20px 0; }
+.name-form input { width: 100%; padding: 16px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 16px; color: #fff; font-size: 16px; margin-bottom: 16px; outline: none; }
+.name-form input::placeholder { color: #64748b; }
+.name-form .note { color: #94a3b8; font-size: 12px; text-align: center; margin-bottom: 16px; }
+.btn-next { width: 100%; padding: 16px; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: #fff; border: none; border-radius: 16px; font-size: 16px; font-weight: 700; cursor: pointer; }
+.btn-next:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* HEADER */
+.header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: linear-gradient(135deg, #0f172a, #1e1b4b); padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
+.header-logo { display: flex; align-items: center; gap: 10px; }
+.header-logo-icon { width: 38px; height: 38px; background: linear-gradient(135deg, var(--primary), var(--secondary)); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 18px; color: #fff; }
+.header-logo-text { font-size: 16px; font-weight: 800; color: #fff; }
+.header-actions { display: flex; align-items: center; gap: 12px; }
+.header-btn { width: 38px; height: 38px; background: rgba(255,255,255,0.1); border: none; border-radius: 12px; color: #fff; font-size: 16px; display: flex; align-items: center; justify-content: center; cursor: pointer; position: relative; }
+.header-btn .badge { position: absolute; top: -4px; right: -4px; width: 18px; height: 18px; background: var(--accent); border-radius: 50%; font-size: 10px; display: flex; align-items: center; justify-content: center; font-weight: 700; }
+.watch-ad-btn { padding: 8px 14px; background: linear-gradient(135deg, var(--secondary), #d97706); border: none; border-radius: 10px; color: #fff; font-size: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; }
+
+/* WALLET */
+.wallet-banner { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); border-radius: 20px; padding: 20px; margin: 80px 16px 16px; color: #fff; position: relative; overflow: hidden; box-shadow: 0 8px 30px rgba(16, 185, 129, 0.3); }
+.wallet-banner::before { content: ''; position: absolute; top: -50%; right: -20%; width: 200px; height: 200px; background: rgba(255,255,255,0.1); border-radius: 50%; }
+.wallet-label { font-size: 12px; opacity: 0.9; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+.wallet-amount { font-size: 36px; font-weight: 800; margin-bottom: 16px; }
+.wallet-actions { display: flex; gap: 10px; }
+.wallet-btn { flex: 1; padding: 10px; background: rgba(255,255,255,0.2); border: none; border-radius: 12px; color: #fff; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; }
+
+/* CARDS */
+.card-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+.card { background: var(--card-bg); border-radius: 16px; padding: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); cursor: pointer; border: 1px solid rgba(0,0,0,0.04); transition: all 0.3s; }
+.card:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
+.card-icon { width: 44px; height: 44px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 20px; margin-bottom: 10px; }
+.card-icon.green { background: rgba(16,185,129,0.15); color: var(--primary); }
+.card-icon.blue { background: rgba(59,130,246,0.15); color: #3b82f6; }
+.card-icon.orange { background: rgba(245,158,11,0.15); color: var(--secondary); }
+.card-icon.red { background: rgba(239,68,68,0.15); color: var(--accent); }
+.card-icon.purple { background: rgba(139,92,246,0.15); color: #8b5cf6; }
+.card h4 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+.card p { font-size: 12px; color: var(--gray); line-height: 1.4; }
+.card .reward { font-size: 13px; font-weight: 700; color: var(--primary); margin-top: 8px; }
+
+/* TASK LIST */
+.task-list { background: var(--card-bg); border-radius: 16px; margin: 0 16px 16px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+.task-item { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-bottom: 1px solid #f1f5f9; cursor: pointer; transition: all 0.3s; }
+.task-item:last-child { border-bottom: none; }
+.task-item:hover { background: #f8fafc; }
+.task-icon { width: 44px; height: 44px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+.task-info { flex: 1; }
+.task-info h4 { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+.task-info p { font-size: 12px; color: var(--gray); }
+.task-reward { font-size: 14px; font-weight: 700; color: var(--primary); }
+
+/* BOTTOM NAV */
+.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-around; padding: 8px 0 12px; z-index: 100; box-shadow: 0 -4px 20px rgba(0,0,0,0.05); }
+.bottom-nav a { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: var(--gray); font-size: 10px; padding: 4px 12px; cursor: pointer; border: none; background: none; }
+.bottom-nav a i { font-size: 20px; margin-bottom: 2px; }
+.bottom-nav a.active { color: var(--primary); }
+
+/* PAGES */
+.page { display: none; animation: fadeIn 0.15s ease-out; }
+.page.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.section { padding: 0 16px; margin-bottom: 20px; }
+.section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.section-title { font-size: 16px; font-weight: 700; }
+
+/* MODAL */
+.modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); z-index: 1000; opacity: 0; visibility: hidden; transition: all 0.3s; }
+.modal-overlay.active { opacity: 1; visibility: visible; }
+.modal { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; border-radius: 24px 24px 0 0; z-index: 1001; padding: 24px; transform: translateY(100%); transition: transform 0.3s ease; max-height: 85vh; overflow-y: auto; }
+.modal.active { transform: translateY(0); }
+.modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+.modal-header h3 { font-size: 18px; font-weight: 700; }
+.modal-close { width: 36px; height: 36px; background: #f1f5f9; border: none; border-radius: 50%; font-size: 16px; cursor: pointer; }
+
+/* FORM */
+.form-group { margin-bottom: 14px; }
+.form-group label { display: block; font-size: 12px; color: var(--gray); margin-bottom: 6px; font-weight: 600; }
+.form-group input, .form-group select { width: 100%; padding: 12px 14px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; font-size: 14px; outline: none; }
+.btn-primary { width: 100%; padding: 14px; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: #fff; border: none; border-radius: 14px; font-size: 15px; font-weight: 700; cursor: pointer; }
+.btn-secondary { width: 100%; padding: 14px; background: #f1f5f9; color: var(--dark); border: none; border-radius: 14px; font-size: 15px; font-weight: 700; cursor: pointer; margin-top: 10px; }
+
+/* PROFILE */
+.profile-header { background: linear-gradient(135deg, #0f172a, #1e1b4b); padding: 80px 20px 30px; text-align: center; color: #fff; }
+.profile-avatar { width: 80px; height: 80px; background: linear-gradient(135deg, var(--primary), var(--secondary)); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 32px; margin: 0 auto 12px; border: 3px solid rgba(255,255,255,0.3); }
+.profile-name { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
+.profile-email { font-size: 13px; opacity: 0.8; margin-bottom: 16px; }
+.profile-stats { display: flex; justify-content: center; gap: 30px; }
+.profile-stat { text-align: center; }
+.profile-stat .num { font-size: 20px; font-weight: 800; }
+.profile-stat .lbl { font-size: 11px; opacity: 0.8; }
+.profile-menu { background: #fff; border-radius: 16px; margin: 16px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+.profile-menu-item { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-bottom: 1px solid #f1f5f9; cursor: pointer; }
+.profile-menu-item:last-child { border-bottom: none; }
+.profile-menu-item i { font-size: 18px; color: var(--gray); width: 24px; text-align: center; }
+.profile-menu-item span { flex: 1; font-size: 14px; font-weight: 600; }
+.profile-menu-item .arrow { color: var(--gray); font-size: 12px; }
+
+/* QUIZ */
+.quiz-header { background: linear-gradient(135deg, #8b5cf6, #6d28d9); border-radius: 20px; padding: 20px; margin: 80px 16px 16px; color: #fff; text-align: center; box-shadow: 0 8px 30px rgba(139, 92, 246, 0.3); }
+.quiz-header h3 { font-size: 20px; margin-bottom: 8px; }
+.quiz-container { background: #fff; border-radius: 20px; padding: 20px; margin: 0 16px 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+.quiz-question { font-size: 16px; font-weight: 700; margin-bottom: 16px; color: var(--dark); }
+.quiz-question-num { display: inline-block; background: var(--primary); color: #fff; padding: 4px 12px; border-radius: 20px; font-size: 12px; margin-bottom: 10px; }
+.quiz-options { display: flex; flex-direction: column; gap: 10px; }
+.quiz-option { padding: 14px 16px; background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 12px; cursor: pointer; font-size: 14px; transition: all 0.3s; }
+.quiz-option:hover { border-color: var(--primary); background: rgba(16,185,129,0.05); }
+.quiz-option.correct { border-color: var(--primary); background: rgba(16,185,129,0.15); }
+.quiz-option.wrong { border-color: var(--accent); background: rgba(239,68,68,0.15); }
+.quiz-option.disabled { pointer-events: none; opacity: 0.7; }
+.quiz-progress { width: 100%; height: 6px; background: #e2e8f0; border-radius: 3px; margin-bottom: 20px; overflow: hidden; }
+.quiz-progress-bar { height: 100%; background: linear-gradient(90deg, var(--primary), var(--secondary)); border-radius: 3px; transition: width 0.3s; }
+.quiz-result { text-align: center; padding: 30px 20px; }
+.quiz-result i { font-size: 60px; color: var(--primary); margin-bottom: 16px; }
+.quiz-result h3 { font-size: 22px; margin-bottom: 8px; }
+.quiz-result p { font-size: 14px; color: var(--gray); margin-bottom: 20px; }
+.quiz-result .reward-box { background: linear-gradient(135deg, var(--secondary), #d97706); color: #fff; padding: 16px; border-radius: 16px; font-size: 18px; font-weight: 700; }
+
+/* ARTICLE */
+.article-header { background: linear-gradient(135deg, #3b82f6, #1d4ed8); border-radius: 20px; padding: 20px; margin: 80px 16px 16px; color: #fff; text-align: center; box-shadow: 0 8px 30px rgba(59, 130, 246, 0.3); }
+.article-container { background: #fff; border-radius: 20px; padding: 20px; margin: 0 16px 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+.article-container h2 { font-size: 18px; font-weight: 700; margin-bottom: 12px; color: var(--dark); }
+.article-container p { font-size: 14px; color: var(--gray); line-height: 1.8; margin-bottom: 16px; }
+.article-read-btn { width: 100%; padding: 14px; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: #fff; border: none; border-radius: 14px; font-size: 15px; font-weight: 700; cursor: pointer; }
+
+/* RATE */
+.rate-header { background: linear-gradient(135deg, #f59e0b, #d97706); border-radius: 20px; padding: 20px; margin: 80px 16px 16px; color: #fff; text-align: center; box-shadow: 0 8px 30px rgba(245, 158, 11, 0.3); }
+.rate-container { background: #fff; border-radius: 20px; padding: 20px; margin: 0 16px 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); text-align: center; }
+.rate-stars { font-size: 40px; color: #e2e8f0; margin-bottom: 16px; cursor: pointer; }
+.rate-stars .star { display: inline-block; transition: all 0.2s; }
+.rate-stars .star.active { color: var(--secondary); }
+.app-install-card { background: #f8fafc; border-radius: 16px; padding: 16px; margin-bottom: 16px; display: flex; align-items: center; gap: 14px; }
+.app-install-card .app-icon { width: 56px; height: 56px; background: linear-gradient(135deg, var(--primary), var(--secondary)); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 24px; color: #fff; flex-shrink: 0; }
+.app-install-card .app-info { flex: 1; text-align: left; }
+.app-install-card .app-info h4 { font-size: 14px; font-weight: 700; margin-bottom: 2px; }
+.app-install-card .app-info p { font-size: 12px; color: var(--gray); }
+.app-install-card .install-btn { padding: 8px 16px; background: var(--primary); color: #fff; border: none; border-radius: 10px; font-size: 12px; font-weight: 700; cursor: pointer; }
+
+/* PROMO */
+.promo-banner { background: linear-gradient(135deg, #1e1b4b, #312e81); border-radius: 16px; padding: 16px; margin: 0 16px 16px; display: flex; align-items: center; gap: 14px; color: #fff; box-shadow: 0 4px 15px rgba(30, 27, 75, 0.3); cursor: pointer; }
+.promo-banner .icon { width: 48px; height: 48px; background: rgba(255,255,255,0.15); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+.promo-banner .content h4 { font-size: 15px; font-weight: 700; margin-bottom: 2px; }
+.promo-banner .content p { font-size: 12px; opacity: 0.8; }
+.promo-banner .btn { margin-left: auto; padding: 8px 14px; background: var(--secondary); border: none; border-radius: 10px; color: #fff; font-size: 12px; font-weight: 700; cursor: pointer; flex-shrink: 0; }
+
+.scratch-mini { background: linear-gradient(135deg, #1e1b4b, #312e81); border-radius: 16px; padding: 16px; margin: 0 16px 16px; display: flex; align-items: center; gap: 14px; color: #fff; box-shadow: 0 4px 15px rgba(30, 27, 75, 0.3); cursor: pointer; }
+.scratch-mini .icon { width: 48px; height: 48px; background: rgba(255,255,255,0.15); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+.scratch-mini .content h4 { font-size: 15px; font-weight: 700; margin-bottom: 2px; }
+.scratch-mini .content p { font-size: 12px; opacity: 0.8; }
+.scratch-mini .btn { margin-left: auto; padding: 8px 14px; background: var(--secondary); border: none; border-radius: 10px; color: #fff; font-size: 12px; font-weight: 700; cursor: pointer; flex-shrink: 0; }
+
+/* AD OVERLAY */
+.ad-watch-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: #000; z-index: 99999; display: none; flex-direction: column; align-items: center; justify-content: center; }
+.ad-watch-overlay.active { display: flex; }
+.ad-watch-overlay .ad-box { width: 90%; max-width: 400px; background: #1a1a2e; border-radius: 20px; padding: 30px; text-align: center; }
+.ad-watch-overlay .ad-box i { font-size: 60px; color: var(--secondary); margin-bottom: 16px; }
+.ad-watch-overlay .ad-box h3 { color: #fff; font-size: 20px; margin-bottom: 8px; }
+.ad-watch-overlay .ad-box p { color: #94a3b8; font-size: 14px; margin-bottom: 20px; }
+.ad-watch-overlay .ad-progress { width: 100%; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; margin-bottom: 20px; overflow: hidden; }
+.ad-watch-overlay .ad-progress-bar { height: 100%; background: linear-gradient(90deg, var(--primary), var(--secondary)); border-radius: 3px; width: 0%; transition: width 0.1s linear; }
+.ad-watch-overlay .ad-timer-text { color: #fff; font-size: 14px; margin-bottom: 16px; }
+.ad-watch-overlay .ad-reward-text { color: var(--secondary); font-size: 18px; font-weight: 700; }
+
+/* INTERSTITIAL */
+.interstitial-ad { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: #000; z-index: 99999; display: none; flex-direction: column; align-items: center; justify-content: center; }
+.interstitial-ad.active { display: flex; }
+.interstitial-ad .ad-label { position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.2); color: #fff; padding: 6px 12px; border-radius: 20px; font-size: 12px; }
+.interstitial-ad .ad-content { width: 100%; max-width: 400px; text-align: center; color: #fff; }
+.interstitial-ad .ad-content i { font-size: 80px; color: var(--secondary); margin-bottom: 20px; }
+.interstitial-ad .ad-content h3 { font-size: 24px; margin-bottom: 10px; }
+.interstitial-ad .ad-content p { font-size: 16px; opacity: 0.8; margin-bottom: 30px; }
+.interstitial-ad .ad-skip { position: absolute; bottom: 40px; background: rgba(255,255,255,0.2); color: #fff; padding: 10px 24px; border-radius: 20px; border: none; font-size: 14px; cursor: pointer; }
+
+/* SCRATCH PAGE */
+.scratch-page-header { background: linear-gradient(135deg, var(--accent), #dc2626); border-radius: 20px; padding: 20px; margin: 80px 16px 16px; color: #fff; text-align: center; box-shadow: 0 8px 30px rgba(239,68,68,0.3); }
+.scratch-big-container { background: #fff; border-radius: 20px; padding: 20px; margin: 0 16px 16px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+.scratch-btn-big { padding: 14px 40px; background: linear-gradient(135deg, var(--accent), #dc2626); color: #fff; border: none; border-radius: 14px; font-size: 16px; font-weight: 700; cursor: pointer; }
+
+/* WATCH ADS PAGE */
+.watch-ads-header { background: linear-gradient(135deg, var(--secondary), #d97706); border-radius: 20px; padding: 20px; margin: 80px 16px 16px; color: #fff; text-align: center; box-shadow: 0 8px 30px rgba(245,158,11,0.3); }
+.ad-options-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin: 0 16px 16px; }
+.ad-option { background: #fff; border-radius: 16px; padding: 16px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); cursor: pointer; transition: all 0.3s; border: 1px solid rgba(0,0,0,0.04); }
+.ad-option:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
+.ad-option .ad-time { font-size: 28px; font-weight: 800; color: var(--primary); }
+.ad-option .ad-label { font-size: 13px; color: var(--gray); margin: 4px 0; }
+.ad-option .ad-reward { font-size: 16px; font-weight: 700; color: var(--secondary); }
+.ad-option .ad-play { font-size: 12px; color: var(--gray); margin-top: 4px; }
+
+/* LEGAL */
+.legal-content { background: #fff; border-radius: 16px; padding: 20px; margin: 0 16px 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+.legal-content h3 { font-size: 16px; font-weight: 700; margin-bottom: 12px; color: var(--primary); }
+.legal-content h4 { font-size: 14px; font-weight: 700; margin: 16px 0 8px; }
+.legal-content p { font-size: 13px; color: var(--gray); line-height: 1.7; margin-bottom: 10px; }
+.legal-content ul { margin-left: 20px; margin-bottom: 12px; }
+.legal-content li { font-size: 13px; color: var(--gray); line-height: 1.7; margin-bottom: 6px; }
+
+/* WITHDRAW */
+.withdraw-method { display: flex; gap: 10px; margin-bottom: 16px; }
+.withdraw-method-btn { flex: 1; padding: 12px; background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 12px; text-align: center; cursor: pointer; }
+.withdraw-method-btn.active { border-color: var(--primary); background: rgba(16,185,129,0.05); }
+.withdraw-method-btn i { font-size: 20px; margin-bottom: 4px; display: block; }
+.withdraw-method-btn span { font-size: 12px; font-weight: 600; }
+
+/* TOAST */
+.toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%) translateY(100px); background: #1e293b; color: #fff; padding: 12px 24px; border-radius: 12px; font-size: 14px; z-index: 2000; opacity: 0; transition: all 0.3s; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+.toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 4px; }
+</style>
+</head>
+<body>
+
+<!-- SPLASH -->
+<div class="splash-screen" id="splashScreen">
+    <div class="splash-logo"><i class="fas fa-gift"></i></div>
+    <div class="splash-title">Daily Task Earn Rewards</div>
+    <div class="splash-subtitle">Complete tasks & earn real rewards</div>
+    <div class="splash-loader"></div>
+</div>
+
+<!-- SETUP COUNTRY -->
+<div class="setup-screen hidden" id="setupCountry">
+    <div class="setup-header">
+        <div class="progress-bar"><div class="progress-dot active"></div><div class="progress-dot"></div><div class="progress-dot"></div></div>
+        <h2>Select Your Country</h2>
+        <p>Choose your country to continue</p>
+    </div>
+    <div class="country-grid">
+        <div class="country-card" onclick="selectCountry(this,'Pakistan','PK')">
+            <span class="flag">&#127477;&#127472;</span><div class="name">Pakistan</div><div class="code">PK</div>
+        </div>
+        <div class="country-card" onclick="selectCountry(this,'India','IN')">
+            <span class="flag">&#127470;&#127475;</span><div class="name">India</div><div class="code">IN</div>
+        </div>
+        <div class="country-card" onclick="selectCountry(this,'Bangladesh','BD')">
+            <span class="flag">&#127463;&#127465;</span><div class="name">Bangladesh</div><div class="code">BD</div>
+        </div>
+        <div class="country-card" onclick="selectCountry(this,'Nepal','NP')">
+            <span class="flag">&#127475;&#127477;</span><div class="name">Nepal</div><div class="code">NP</div>
+        </div>
+        <div class="country-card" onclick="selectCountry(this,'Sri Lanka','LK')">
+            <span class="flag">&#127473;&#127479;</span><div class="name">Sri Lanka</div><div class="code">LK</div>
+        </div>
+        <div class="country-card" onclick="selectCountry(this,'Afghanistan','AF')">
+            <span class="flag">&#127462;&#127467;</span><div class="name">Afghanistan</div><div class="code">AF</div>
+        </div>
+        <div class="country-card" onclick="selectCountry(this,'UAE','AE')">
+            <span class="flag">&#127462;&#127466;</span><div class="name">UAE</div><div class="code">AE</div>
+        </div>
+        <div class="country-card" onclick="selectCountry(this,'Saudi Arabia','SA')">
+            <span class="flag">&#127480;&#127462;</span><div class="name">Saudi Arabia</div><div class="code">SA</div>
+        </div>
+    </div>
+</div>
+
+<!-- SETUP LANGUAGE -->
+<div class="setup-screen hidden" id="setupLanguage">
+    <div class="setup-header">
+        <div class="progress-bar"><div class="progress-dot active"></div><div class="progress-dot active"></div><div class="progress-dot"></div></div>
+        <h2>Select Language</h2>
+        <p>Choose your preferred language</p>
+    </div>
+    <div class="lang-grid">
+        <div class="lang-card" onclick="selectLanguage(this,'English','en')">
+            <i class="fas fa-globe"></i><div class="name">English</div>
+        </div>
+        <div class="lang-card" onclick="selectLanguage(this,'Urdu','ur')">
+            <i class="fas fa-language"></i><div class="name">Urdu / &#1575;&#1585;&#1583;&#1608;</div>
+        </div>
+        <div class="lang-card" onclick="selectLanguage(this,'Hindi','hi')">
+            <i class="fas fa-language"></i><div class="name">Hindi / &#2361;&#2367;&#2306;&#2342;&#2368;</div>
+        </div>
+        <div class="lang-card" onclick="selectLanguage(this,'Arabic','ar')">
+            <i class="fas fa-language"></i><div class="name">Arabic / &#1575;&#1604;&#1593;&#1585;&#1576;&#1610;&#1577;</div>
+        </div>
+    </div>
+</div>
+
+<!-- SETUP NAME + PHONE -->
+<div class="setup-screen hidden" id="setupName">
+    <div class="setup-header">
+        <div class="progress-bar"><div class="progress-dot active"></div><div class="progress-dot active"></div><div class="progress-dot active"></div></div>
+        <h2>Enter Your Details</h2>
+        <p>This info will be used for your account</p>
+    </div>
+    <div class="name-form">
+        <input type="text" id="userNameInput" placeholder="Your Full Name" maxlength="30" autocomplete="off">
+        <input type="tel" id="userPhoneInput" placeholder="Phone Number (03XX-XXXXXXX)" maxlength="15" autocomplete="off">
+        <div class="note">This device will be linked permanently. One account per device.</div>
+        <button class="btn-next" id="nameBtn" onclick="saveUserName()" disabled>Start Earning</button>
+    </div>
+</div>
+
+<!-- INTERSTITIAL AD -->
+<div class="interstitial-ad" id="interstitialAd">
+    <div class="ad-label">Ad <span id="interTimer">5</span>s</div>
+    <div class="ad-content">
+        <i class="fas fa-ad"></i>
+        <h3>Sponsored Content</h3>
+        <p>Watch this ad to support our platform</p>
+    </div>
+    <button class="ad-skip" id="interSkipBtn" onclick="closeInterstitial()" disabled>Skip in <span id="interSkipTimer">5</span>s</button>
+</div>
+
+<!-- AD WATCH OVERLAY -->
+<div class="ad-watch-overlay" id="adWatchOverlay">
+    <div class="ad-box">
+        <i class="fas fa-play-circle"></i>
+        <h3 id="adWatchTitle">Watching Ad...</h3>
+        <p id="adWatchDesc">Please wait while the ad plays</p>
+        <div class="ad-progress"><div class="ad-progress-bar" id="adProgressBar"></div></div>
+        <div class="ad-timer-text" id="adTimerText">0s / 5s</div>
+        <div class="ad-reward-text" id="adRewardText">+10 Points</div>
+    </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="mainApp" class="hidden">
+    <header class="header">
+        <div class="header-logo">
+            <div class="header-logo-icon"><i class="fas fa-gift"></i></div>
+            <span class="header-logo-text">Daily Task</span>
+        </div>
+        <div class="header-actions">
+            <button class="watch-ad-btn" id="headerWatchAdBtn" onclick="showPage('pageWatchAds')">
+                <i class="fas fa-play-circle"></i> Watch Ad
+            </button>
+            <button class="header-btn" onclick="openNotifications()">
+                <i class="fas fa-bell"></i>
+                <span class="badge" id="notifBadge">3</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- HOME PAGE -->
+    <div class="page active" id="pageHome">
+        <div class="wallet-banner">
+            <div class="wallet-label">Total Balance</div>
+            <div class="wallet-amount">Rs <span id="userBalance">0.00</span></div>
+            <div class="wallet-actions">
+                <button class="wallet-btn" onclick="openWithdraw()"><i class="fas fa-wallet"></i> Withdraw</button>
+                <button class="wallet-btn" onclick="openHistory()"><i class="fas fa-history"></i> History</button>
+            </div>
+        </div>
+
+        <div class="scratch-mini" onclick="showPage('pageScratch')">
+            <div class="icon"><i class="fas fa-ticket-alt"></i></div>
+            <div class="content">
+                <h4>Scratch & Win</h4>
+                <p>Scratch to reveal instant rewards!</p>
+            </div>
+            <button class="btn">Play</button>
+        </div>
+
+        <div class="promo-banner" onclick="claimDailyBonus()">
+            <div class="icon"><i class="fas fa-crown"></i></div>
+            <div class="content">
+                <h4>Daily Bonus</h4>
+                <p>Login everyday to earn extra rewards!</p>
+            </div>
+            <button class="btn">Claim</button>
+        </div>
+
+        <div class="section">
+            <div class="section-header"><span class="section-title">Quick Access</span></div>
+            <div class="card-grid">
+                <div class="card" onclick="showPage('pageEarn')">
+                    <div class="card-icon orange"><i class="fas fa-tasks"></i></div>
+                    <h4>Tasks</h4><p>Complete & earn</p><div class="reward">+Points</div>
+                </div>
+                <div class="card" onclick="showPage('pageWatchAds')">
+                    <div class="card-icon red"><i class="fas fa-play-circle"></i></div>
+                    <h4>Watch Ads</h4><p>Watch & earn</p><div class="reward">+10-400</div>
+                </div>
+                <div class="card" onclick="showPage('pageInvite')">
+                    <div class="card-icon purple"><i class="fas fa-user-plus"></i></div>
+                    <h4>Invite</h4><p>Refer friends</p><div class="reward">+500</div>
+                </div>
+                <div class="card" onclick="showPage('pageProfile')">
+                    <div class="card-icon blue"><i class="fas fa-user"></i></div>
+                    <h4>Profile</h4><p>Your account</p><div class="reward">View</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- WATCH ADS PAGE -->
+    <div class="page" id="pageWatchAds">
+        <div class="watch-ads-header">
+            <h3><i class="fas fa-play-circle"></i> Watch Ads & Earn</h3>
+            <p>Watch ads of different durations and earn points!</p>
+            <div class="ads-left" id="adsLeftToday" style="font-size:13px;margin-top:8px;opacity:0.9;">Ads left today: 4/4</div>
+        </div>
+        <div class="ad-options-grid">
+            <div class="ad-option" onclick="watchAdWithTimer(5, 10)">
+                <div class="ad-time">5s</div>
+                <div class="ad-label">Quick Ad</div>
+                <div class="ad-reward">+10 Points</div>
+                <div class="ad-play"><i class="fas fa-play"></i> Watch</div>
+            </div>
+            <div class="ad-option" onclick="watchAdWithTimer(6, 15)">
+                <div class="ad-time">6s</div>
+                <div class="ad-label">Short Ad</div>
+                <div class="ad-reward">+15 Points</div>
+                <div class="ad-play"><i class="fas fa-play"></i> Watch</div>
+            </div>
+            <div class="ad-option" onclick="watchAdWithTimer(10, 30)">
+                <div class="ad-time">10s</div>
+                <div class="ad-label">Medium Ad</div>
+                <div class="ad-reward">+30 Points</div>
+                <div class="ad-play"><i class="fas fa-play"></i> Watch</div>
+            </div>
+            <div class="ad-option" onclick="watchAdWithTimer(15, 50)">
+                <div class="ad-time">15s</div>
+                <div class="ad-label">Long Ad</div>
+                <div class="ad-reward">+50 Points</div>
+                <div class="ad-play"><i class="fas fa-play"></i> Watch</div>
+            </div>
+            <div class="ad-option" onclick="watchAdWithTimer(30, 100)">
+                <div class="ad-time">30s</div>
+                <div class="ad-label">Full Ad</div>
+                <div class="ad-reward">+100 Points</div>
+                <div class="ad-play"><i class="fas fa-play"></i> Watch</div>
+            </div>
+            <div class="ad-option" onclick="watchAdWithTimer(60, 200)">
+                <div class="ad-time">60s</div>
+                <div class="ad-label">Mega Ad</div>
+                <div class="ad-reward">+200 Points</div>
+                <div class="ad-play"><i class="fas fa-play"></i> Watch</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRATCH PAGE -->
+    <div class="page" id="pageScratch">
+        <div class="scratch-page-header">
+            <h3><i class="fas fa-ticket-alt"></i> Scratch & Win</h3>
+            <p>Scratch the card to reveal your prize!</p>
+        </div>
+        <div class="scratch-big-container">
+            <h3 style="font-size:16px;font-weight:700;margin-bottom:16px;">Scratch the silver area below</h3>
+            <div class="scratch-card-area" id="scratchCardArea" style="position:relative;width:300px;height:160px;margin:0 auto 16px;border-radius:16px;overflow:hidden;">
+                <div class="scratch-prize-bg" style="position:absolute;top:0;left:0;width:100%;height:100%;background:linear-gradient(135deg,var(--secondary),#d97706);display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;">
+                    <div style="font-size:14px;opacity:0.9;margin-bottom:4px;">You Won!</div>
+                    <div id="scratchPrizeAmount" style="font-size:36px;font-weight:800;">20 Points</div>
+                </div>
+                <canvas class="scratch-canvas-big" id="scratchCanvasBig" width="300" height="160" style="position:absolute;top:0;left:0;width:100%;height:100%;cursor:pointer;touch-action:none;"></canvas>
+            </div>
+            <button class="scratch-btn-big" onclick="resetScratchCard()">New Card</button>
+        </div>
+    </div>
+
+    <!-- EARN PAGE -->
+    <div class="page" id="pageEarn">
+        <div class="section" style="margin-top:80px;">
+            <div class="section-header"><span class="section-title">More Tasks</span></div>
+            <div class="task-list">
+                <div class="task-item" onclick="showPage('pageQuiz')">
+                    <div class="task-icon" style="background:rgba(139,92,246,0.15);color:#8b5cf6;"><i class="fas fa-brain"></i></div>
+                    <div class="task-info"><h4>Daily Quiz</h4><p>20 Science & Biology questions</p></div>
+                    <div class="task-reward">+100 Points</div>
+                </div>
+                <div class="task-item" onclick="showPage('pageArticle')">
+                    <div class="task-icon" style="background:rgba(234,179,8,0.15);color:#eab308;"><i class="fas fa-newspaper"></i></div>
+                    <div class="task-info"><h4>Read Article</h4><p>Read and earn</p></div>
+                    <div class="task-reward">+100 Points</div>
+                </div>
+                <div class="task-item" onclick="showPage('pageRateApp')">
+                    <div class="task-icon" style="background:rgba(239,68,68,0.15);color:#ef4444;"><i class="fas fa-star"></i></div>
+                    <div class="task-info"><h4>Rate App</h4><p>5-star + install apps</p></div>
+                    <div class="task-reward">+20-50 Points</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- INVITE PAGE -->
+    <div class="page" id="pageInvite">
+        <div style="background:linear-gradient(135deg,var(--primary),var(--primary-dark));border-radius:20px;padding:24px;margin:80px 16px 16px;color:#fff;text-align:center;box-shadow:0 8px 30px rgba(16, 185, 129, 0.3);">
+            <h3><i class="fas fa-gift"></i> Invite & Earn</h3>
+            <p>Share your referral link with friends and earn 500 Points for each friend!</p>
+            <div style="background:rgba(255,255,255,0.2);border-radius:12px;padding:12px;font-size:20px;font-weight:800;letter-spacing:2px;margin-bottom:16px;" id="referralCode">PKR2024</div>
+            <div style="background:rgba(255,255,255,0.1);border-radius:8px;padding:10px;margin-bottom:12px;font-size:11px;word-break:break-all;" id="fullReferralLink">https://dailytaskearn.com/?ref=PKR2024</div>
+            <button class="wallet-btn" style="width:100%;margin-bottom:8px;" onclick="copyReferralLink()"><i class="fas fa-copy"></i> Copy Full Link</button>
+            <button class="wallet-btn" style="width:100%;" onclick="copyReferralCode()"><i class="fas fa-copy"></i> Copy Code Only</button>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3, 1fr);gap:12px;margin:0 16px 16px;">
+            <div style="background:#fff;border-radius:16px;padding:16px;text-align:center;box-shadow:0 2px 10px rgba(0,0,0,0.05);">
+                <div id="inviteCount" style="font-size:22px;font-weight:800;color:var(--primary);">0</div>
+                <div style="font-size:11px;color:var(--gray);margin-top:4px;">Invites</div>
+            </div>
+            <div style="background:#fff;border-radius:16px;padding:16px;text-align:center;box-shadow:0 2px 10px rgba(0,0,0,0.05);">
+                <div id="inviteEarnings" style="font-size:22px;font-weight:800;color:var(--primary);">0</div>
+                <div style="font-size:11px;color:var(--gray);margin-top:4px;">Earnings</div>
+            </div>
+            <div style="background:#fff;border-radius:16px;padding:16px;text-align:center;box-shadow:0 2px 10px rgba(0,0,0,0.05);">
+                <div style="font-size:22px;font-weight:800;color:var(--primary);">500</div>
+                <div style="font-size:11px;color:var(--gray);margin-top:4px;">Per Invite</div>
+            </div>
+        </div>
+        <div class="section" style="padding:0 16px;margin-bottom:20px;">
+            <div class="section-header"><span class="section-title">Share Via (8 Methods)</span></div>
+            <div class="card-grid">
+                <div class="card" onclick="shareVia('whatsapp')">
+                    <div class="card-icon" style="background:rgba(37,211,102,0.15);color:#25d366;"><i class="fab fa-whatsapp"></i></div>
+                    <h4>WhatsApp</h4><p>Share on WhatsApp</p><div class="reward" style="color:#25d366;">Share</div>
+                </div>
+                <div class="card" onclick="shareVia('facebook')">
+                    <div class="card-icon" style="background:rgba(24,119,242,0.15);color:#1877f2;"><i class="fab fa-facebook"></i></div>
+                    <h4>Facebook</h4><p>Share on Facebook</p><div class="reward" style="color:#1877f2;">Share</div>
+                </div>
+                <div class="card" onclick="shareVia('telegram')">
+                    <div class="card-icon" style="background:rgba(0,136,204,0.15);color:#0088cc;"><i class="fab fa-telegram"></i></div>
+                    <h4>Telegram</h4><p>Share on Telegram</p><div class="reward" style="color:#0088cc;">Share</div>
+                </div>
+                <div class="card" onclick="shareVia('twitter')">
+                    <div class="card-icon" style="background:rgba(29,161,242,0.15);color:#1da1f2;"><i class="fab fa-twitter"></i></div>
+                    <h4>Twitter/X</h4><p>Share on Twitter</p><div class="reward" style="color:#1da1f2;">Share</div>
+                </div>
+                <div class="card" onclick="shareVia('instagram')">
+                    <div class="card-icon" style="background:rgba(225,48,108,0.15);color:#e1306c;"><i class="fab fa-instagram"></i></div>
+                    <h4>Instagram</h4><p>Share on Instagram</p><div class="reward" style="color:#e1306c;">Share</div>
+                </div>
+                <div class="card" onclick="shareVia('sms')">
+                    <div class="card-icon" style="background:rgba(245,158,11,0.15);color:#f59e0b;"><i class="fas fa-sms"></i></div>
+                    <h4>SMS</h4><p>Send via SMS</p><div class="reward" style="color:#f59e0b;">Share</div>
+                </div>
+                <div class="card" onclick="shareVia('email')">
+                    <div class="card-icon" style="background:rgba(239,68,68,0.15);color:#ef4444;"><i class="fas fa-envelope"></i></div>
+                    <h4>Email</h4><p>Send via Email</p><div class="reward" style="color:#ef4444;">Share</div>
+                </div>
+                <div class="card" onclick="shareVia('copy')">
+                    <div class="card-icon" style="background:rgba(16,185,129,0.15);color:#10b981;"><i class="fas fa-link"></i></div>
+                    <h4>Copy Link</h4><p>Copy to clipboard</p><div class="reward" style="color:#10b981;">Copy</div>
+                </div>
+            </div>
+        </div>
+        <div class="section" style="padding:0 16px;margin-bottom:20px;">
+            <div class="section-header"><span class="section-title">How It Works</span></div>
+            <div class="task-list">
+                <div class="task-item">
+                    <div class="task-icon" style="background:rgba(16,185,129,0.15);color:#10b981;"><i class="fas fa-share-alt"></i></div>
+                    <div class="task-info"><h4>Step 1: Share Link</h4><p>Copy your unique referral link</p></div>
+                </div>
+                <div class="task-item">
+                    <div class="task-icon" style="background:rgba(59,130,246,0.15);color:#3b82f6;"><i class="fas fa-user-plus"></i></div>
+                    <div class="task-info"><h4>Step 2: Friend Joins</h4><p>Your friend downloads and registers</p></div>
+                </div>
+                <div class="task-item">
+                    <div class="task-icon" style="background:rgba(245,158,11,0.15);color:#f59e0b;"><i class="fas fa-coins"></i></div>
+                    <div class="task-info"><h4>Step 3: Earn Points</h4><p>You get 500 Points instantly!</p></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- QUIZ PAGE -->
+    <div class="page" id="pageQuiz">
+        <div class="quiz-header">
+            <h3><i class="fas fa-brain"></i> Daily Quiz</h3>
+            <p>Answer 20 Science & Biology questions!</p>
+        </div>
+        <div class="quiz-container" id="quizContainer">
+            <div class="quiz-progress"><div class="quiz-progress-bar" id="quizProgressBar" style="width:0%"></div></div>
+            <div class="quiz-question-num" id="quizQuestionNum">Question 1 / 20</div>
+            <div class="quiz-question" id="quizQuestion">Loading...</div>
+            <div class="quiz-options" id="quizOptions"></div>
+        </div>
+        <div class="quiz-container hidden" id="quizResultContainer">
+            <div class="quiz-result">
+                <i class="fas fa-trophy"></i>
+                <h3>Quiz Completed!</h3>
+                <p id="quizScoreText">You scored 0/20</p>
+                <div class="reward-box">+100 Points!</div>
+                <button class="btn-primary" style="margin-top:16px;" onclick="resetQuiz()">Play Again</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ARTICLE PAGE -->
+    <div class="page" id="pageArticle">
+        <div class="article-header">
+            <h3><i class="fas fa-newspaper"></i> Read Article</h3>
+            <p>Read the full article and earn points!</p>
+        </div>
+        <div class="article-container" id="articleContainer">
+            <h2>The Wonders of Science and Biology</h2>
+            <p style="font-size:12px;color:var(--gray);margin-bottom:12px;"><i class="fas fa-clock"></i> 3 min read | <i class="fas fa-user"></i> Science Daily</p>
+            <p>Science is the systematic study of the structure and behavior of the physical and natural world through observation and experiment. Biology, a branch of science, focuses on living organisms and their vital processes.</p>
+            <p><strong>1. The Human Cell:</strong> The human body contains approximately 37.2 trillion cells. Each cell is a complex factory that performs thousands of chemical reactions every second.</p>
+            <p><strong>2. DNA Structure:</strong> Deoxyribonucleic acid (DNA) is the molecule that carries genetic instructions. DNA is composed of two strands that wind around each other to form a double helix.</p>
+            <p><strong>3. Photosynthesis:</strong> Plants convert sunlight into chemical energy through photosynthesis. This process occurs in chloroplasts and produces glucose and oxygen.</p>
+            <p><strong>4. The Human Brain:</strong> The brain contains approximately 86 billion neurons. Each neuron can form thousands of connections, creating a network of trillions of synapses.</p>
+            <p><strong>5. Evolution:</strong> Charles Darwin proposed the theory of evolution by natural selection. Organisms better adapted to their environment tend to survive and produce more offspring.</p>
+            <p><strong>6. Microorganisms:</strong> Bacteria are single-celled organisms found everywhere. Some bacteria are beneficial (like gut bacteria that aid digestion), while others can cause diseases.</p>
+            <p><strong>7. Ecosystems:</strong> An ecosystem includes all living organisms and their physical environment. Food chains show how energy flows from producers to consumers.</p>
+            <p><strong>8. Genetics:</strong> Gregor Mendel discovered the basic principles of heredity through experiments with pea plants. He established that traits are inherited as discrete units (genes).</p>
+            <button class="article-read-btn" id="articleReadBtn" onclick="readArticle()">
+                <i class="fas fa-check-circle"></i> I have read this article (+100 Points)
+            </button>
+        </div>
+    </div>
+
+    <!-- RATE APP PAGE -->
+    <div class="page" id="pageRateApp">
+        <div class="rate-header">
+            <h3><i class="fas fa-star"></i> Rate & Install Apps</h3>
+            <p>Rate our app and install recommended apps to earn!</p>
+        </div>
+        <div class="rate-container">
+            <h4 style="margin-bottom:12px;font-size:16px;">Rate Our App</h4>
+            <div class="rate-stars" id="rateStars">
+                <span class="star" onclick="rateStar(1)">&#9733;</span>
+                <span class="star" onclick="rateStar(2)">&#9733;</span>
+                <span class="star" onclick="rateStar(3)">&#9733;</span>
+                <span class="star" onclick="rateStar(4)">&#9733;</span>
+                <span class="star" onclick="rateStar(5)">&#9733;</span>
+            </div>
+            <p style="font-size:13px;color:var(--gray);margin-bottom:20px;">Tap stars to rate (5 stars = +20 Points)</p>
+            <h4 style="margin-bottom:12px;font-size:16px;">Install Apps</h4>
+            <div class="app-install-card">
+                <div class="app-icon"><i class="fas fa-shopping-bag"></i></div>
+                <div class="app-info"><h4>Shopping App</h4><p>Best deals & discounts</p></div>
+                <button class="install-btn" onclick="installApp('shopping', 20)">Install (+20)</button>
+            </div>
+            <div class="app-install-card">
+                <div class="app-icon"><i class="fas fa-gamepad"></i></div>
+                <div class="app-info"><h4>Game App</h4><p>Fun games to play</p></div>
+                <button class="install-btn" onclick="installApp('game', 50)">Install (+50)</button>
+            </div>
+            <div class="app-install-card">
+                <div class="app-icon"><i class="fas fa-music"></i></div>
+                <div class="app-info"><h4>Music App</h4><p>Stream millions of songs</p></div>
+                <button class="install-btn" onclick="installApp('music', 20)">Install (+20)</button>
+            </div>
+            <div class="app-install-card">
+                <div class="app-icon"><i class="fas fa-video"></i></div>
+                <div class="app-info"><h4>Video App</h4><p>Watch trending videos</p></div>
+                <button class="install-btn" onclick="installApp('video', 50)">Install (+50)</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PROFILE PAGE -->
+    <div class="page" id="pageProfile">
+        <div class="profile-header">
+            <div class="profile-avatar"><i class="fas fa-user"></i></div>
+            <div class="profile-name" id="profileName">User</div>
+            <div class="profile-email" id="profilePhone">+92-300-XXXXXXX</div>
+            <div class="profile-stats">
+                <div class="profile-stat"><div class="num" id="profileTasks">0</div><div class="lbl">Tasks</div></div>
+                <div class="profile-stat"><div class="num" id="profileReferrals">0</div><div class="lbl">Invites</div></div>
+                <div class="profile-stat"><div class="num" id="profileEarned">0</div><div class="lbl">Earned</div></div>
+            </div>
+        </div>
+        <div class="profile-menu">
+            <div class="profile-menu-item" onclick="openWithdraw()"><i class="fas fa-wallet" style="color:var(--primary);"></i><span>My Wallet</span><i class="fas fa-chevron-right arrow"></i></div>
+            <div class="profile-menu-item" onclick="openHistory()"><i class="fas fa-history" style="color:#3b82f6;"></i><span>History</span><i class="fas fa-chevron-right arrow"></i></div>
+            <div class="profile-menu-item" onclick="showPage('pageInvite')"><i class="fas fa-share-alt" style="color:#8b5cf6;"></i><span>Invite Friends</span><i class="fas fa-chevron-right arrow"></i></div>
+            <div class="profile-menu-item" onclick="showPage('pageAbout')"><i class="fas fa-info-circle" style="color:#3b82f6;"></i><span>About Us</span><i class="fas fa-chevron-right arrow"></i></div>
+            <div class="profile-menu-item" onclick="showPage('pagePrivacy')"><i class="fas fa-shield-alt" style="color:#10b981;"></i><span>Privacy Policy</span><i class="fas fa-chevron-right arrow"></i></div>
+            <div class="profile-menu-item" onclick="showPage('pageTerms')"><i class="fas fa-file-contract" style="color:#f59e0b;"></i><span>Terms & Conditions</span><i class="fas fa-chevron-right arrow"></i></div>
+            <div class="profile-menu-item" onclick="showPage('pageSettings')"><i class="fas fa-cog" style="color:var(--gray);"></i><span>Settings</span><i class="fas fa-chevron-right arrow"></i></div>
+        </div>
+    </div>
+
+    <!-- ABOUT PAGE -->
+    <div class="page" id="pageAbout">
+        <div class="section" style="margin-top:80px;">
+            <div class="section-header"><span class="section-title">About Us</span></div>
+            <div class="legal-content">
+                <h3><i class="fas fa-info-circle"></i> About Daily Task Earn Rewards</h3>
+                <p>Daily Task Earn Rewards is a reward platform that allows users to earn points by completing simple daily tasks, watching ads, taking quizzes, and reading articles. Points can be redeemed for real rewards.</p>
+                <h4>Our Mission</h4>
+                <p>To provide a fun and engaging platform for people to earn extra rewards from their smartphones through legitimate activities.</p>
+                <h4>How It Works</h4>
+                <ul>
+                    <li>Select your country and language</li>
+                    <li>Enter your name and phone to create account</li>
+                    <li>Complete tasks and earn points</li>
+                    <li>Watch ads of different durations for points</li>
+                    <li>Take quizzes and read articles</li>
+                    <li>Redeem points for rewards (1000 Points = Rs 50)</li>
+                </ul>
+                <h4>Contact Us</h4>
+                <p>Email: support@dailytaskearn.com<br>WhatsApp: +92-300-XXXXXXX<br>Working Hours: 24/7</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- PRIVACY PAGE -->
+    <div class="page" id="pagePrivacy">
+        <div class="section" style="margin-top:80px;">
+            <div class="section-header"><span class="section-title">Privacy Policy</span></div>
+            <div class="legal-content">
+                <h3><i class="fas fa-shield-alt"></i> Privacy Policy</h3>
+                <p><strong>Last Updated:</strong> June 2026</p>
+                <h4>1. Information We Collect</h4>
+                <ul>
+                    <li><strong>Name:</strong> Used to identify your account</li>
+                    <li><strong>Phone Number:</strong> Used for account verification and withdrawal</li>
+                    <li><strong>Country:</strong> Used to provide localized content</li>
+                    <li><strong>Language:</strong> Used to display content in your preferred language</li>
+                    <li><strong>Device ID:</strong> Used to prevent multiple accounts per device</li>
+                </ul>
+                <h4>2. How We Use Your Information</h4>
+                <ul>
+                    <li>To provide and maintain our services</li>
+                    <li>To process your withdrawals and rewards</li>
+                    <li>To prevent fraud and abuse</li>
+                    <li>To communicate with you about your account</li>
+                </ul>
+                <h4>3. Data Security</h4>
+                <p>We use industry-standard security measures to protect your data. All data is stored locally on your device and encrypted when transmitted.</p>
+                <h4>4. Third-Party Services</h4>
+                <p>We use third-party advertising networks to serve ads. These networks may collect device information for ad targeting.</p>
+                <h4>5. Your Rights</h4>
+                <p>You can request deletion of your data at any time by contacting us or using the "Clear App Data" option in settings.</p>
+                <h4>6. Contact Us</h4>
+                <p>Email: support@dailytaskearn.com</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- TERMS PAGE -->
+    <div class="page" id="pageTerms">
+        <div class="section" style="margin-top:80px;">
+            <div class="section-header"><span class="section-title">Terms & Conditions</span></div>
+            <div class="legal-content">
+                <h3><i class="fas fa-file-contract"></i> Terms & Conditions</h3>
+                <p><strong>Last Updated:</strong> June 2026</p>
+                <p>By using Daily Task Earn Rewards, you agree to these terms.</p>
+                <h4>1. Eligibility</h4>
+                <ul>
+                    <li>One account per device is allowed</li>
+                    <li>You must be a resident of a supported country</li>
+                    <li>You must provide accurate personal information</li>
+                </ul>
+                <h4>2. Earnings & Rewards</h4>
+                <ul>
+                    <li>1000 Points = Rs 50 (conversion rate)</li>
+                    <li>Tasks must be completed honestly</li>
+                    <li>Max 4 ads per day per user</li>
+                    <li>Min withdrawal Rs 100 (2000 Points)</li>
+                    <li>Rewards are subject to verification</li>
+                </ul>
+                <h4>3. Prohibited Activities</h4>
+                <ul>
+                    <li>Using VPN or fake location</li>
+                    <li>Creating multiple accounts</li>
+                    <li>Using bots or automation</li>
+                    <li>Fraudulent activities</li>
+                    <li>Sharing account credentials</li>
+                </ul>
+                <h4>4. Withdrawal Policy</h4>
+                <ul>
+                    <li>Withdrawals processed within 7 business days</li>
+                    <li>Account verification required for first withdrawal</li>
+                    <li>We reserve the right to reject suspicious withdrawals</li>
+                    <li>Minimum withdrawal: Rs 100</li>
+                </ul>
+                <h4>5. Termination</h4>
+                <p>We reserve the right to terminate accounts that violate these terms without notice.</p>
+                <h4>6. Contact</h4>
+                <p>support@dailytaskearn.com</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- SETTINGS PAGE -->
+    <div class="page" id="pageSettings">
+        <div class="section" style="margin-top:80px;">
+            <div class="section-header"><span class="section-title">Settings</span></div>
+            <div class="profile-menu">
+                <div class="profile-menu-item"><i class="fas fa-globe" style="color:#3b82f6;"></i><span>Country</span><span id="settingCountry" style="color:var(--gray);font-size:12px;">Pakistan</span></div>
+                <div class="profile-menu-item"><i class="fas fa-language" style="color:#8b5cf6;"></i><span>Language</span><span id="settingLanguage" style="color:var(--gray);font-size:12px;">English</span></div>
+                <div class="profile-menu-item" onclick="toggleSound()"><i class="fas fa-volume-up" style="color:#10b981;"></i><span>Sound Effects</span><i class="fas fa-toggle-on" id="soundToggle" style="color:var(--primary);"></i></div>
+                <div class="profile-menu-item" onclick="toggleNotif()"><i class="fas fa-bell" style="color:#f59e0b;"></i><span>Push Notifications</span><i class="fas fa-toggle-on" id="notifToggle" style="color:var(--primary);"></i></div>
+                <div class="profile-menu-item" onclick="showPage('pagePrivacy')"><i class="fas fa-shield-alt" style="color:#10b981;"></i><span>Privacy Policy</span><i class="fas fa-chevron-right arrow"></i></div>
+                <div class="profile-menu-item" onclick="showPage('pageTerms')"><i class="fas fa-file-contract" style="color:#f59e0b;"></i><span>Terms & Conditions</span><i class="fas fa-chevron-right arrow"></i></div>
+                <div class="profile-menu-item" onclick="clearAppData()"><i class="fas fa-trash-alt" style="color:#ef4444;"></i><span>Clear App Data</span><i class="fas fa-chevron-right arrow"></i></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Nav -->
+    <nav class="bottom-nav">
+        <a href="#" class="active" onclick="showPage('pageHome'); return false;"><i class="fas fa-home"></i><span>Home</span></a>
+        <a href="#" onclick="showPage('pageEarn'); return false;"><i class="fas fa-tasks"></i><span>Earn</span></a>
+        <a href="#" onclick="showPage('pageInvite'); return false;"><i class="fas fa-user-plus"></i><span>Invite</span></a>
+        <a href="#" onclick="showPage('pageProfile'); return false;"><i class="fas fa-user"></i><span>Profile</span></a>
+    </nav>
+</div>
+
+<!-- MODALS -->
+<div class="modal-overlay" id="withdrawModalOverlay" onclick="closeModal('withdrawModal')"></div>
+<div class="modal" id="withdrawModal">
+    <div class="modal-header">
+        <h3><i class="fas fa-wallet"></i> Withdraw</h3>
+        <button class="modal-close" onclick="closeModal('withdrawModal')"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="withdraw-method">
+        <div class="withdraw-method-btn active" onclick="selectMethod(this,'easypaisa')"><i class="fas fa-mobile-alt" style="color:#10b981;"></i><span>EasyPaisa</span></div>
+        <div class="withdraw-method-btn" onclick="selectMethod(this,'jazzcash')"><i class="fas fa-money-bill-wave" style="color:#3b82f6;"></i><span>JazzCash</span></div>
+        <div class="withdraw-method-btn" onclick="selectMethod(this,'bank')"><i class="fas fa-university" style="color:#8b5cf6;"></i><span>Bank</span></div>
+    </div>
+    <div class="form-group">
+        <label>Amount (Rs) - Min: 100</label>
+        <input type="number" placeholder="Enter amount" id="withdrawAmount">
+    </div>
+    <div class="form-group">
+        <label>Account Number / Phone</label>
+        <input type="text" placeholder="03XX-XXXXXXX" id="withdrawAccount">
+    </div>
+    <div class="form-group">
+        <label>Account Name</label>
+        <input type="text" placeholder="Account holder name" id="withdrawAccountName">
+    </div>
+    <button class="btn-primary" onclick="submitWithdraw()">Request Withdrawal</button>
+</div>
+
+<div class="modal-overlay" id="historyModalOverlay" onclick="closeModal('historyModal')"></div>
+<div class="modal" id="historyModal">
+    <div class="modal-header">
+        <h3><i class="fas fa-history"></i> History</h3>
+        <button class="modal-close" onclick="closeModal('historyModal')"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="task-list" id="historyList" style="margin:0;"></div>
+</div>
+
+<div class="modal-overlay" id="notifModalOverlay" onclick="closeModal('notifModal')"></div>
+<div class="modal" id="notifModal">
+    <div class="modal-header">
+        <h3><i class="fas fa-bell"></i> Notifications</h3>
+        <button class="modal-close" onclick="closeModal('notifModal')"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="task-list" style="margin:0;">
+        <div class="task-item" onclick="showToast('Bonus claimed!'); closeModal('notifModal');">
+            <div class="task-icon" style="background:rgba(245,158,11,0.15);color:#f59e0b;"><i class="fas fa-gift"></i></div>
+            <div class="task-info"><h4>Daily Bonus Available!</h4><p>Claim your daily reward now</p></div>
+        </div>
+        <div class="task-item" onclick="showToast('New task available!'); closeModal('notifModal');">
+            <div class="task-icon" style="background:rgba(139,92,246,0.15);color:#8b5cf6;"><i class="fas fa-tasks"></i></div>
+            <div class="task-info"><h4>New Tasks Added!</h4><p>Check the Earn page for new tasks</p></div>
+        </div>
+        <div class="task-item" onclick="showToast('Referral bonus added!'); closeModal('notifModal');">
+            <div class="task-icon" style="background:rgba(16,185,129,0.15);color:#10b981;"><i class="fas fa-user-plus"></i></div>
+            <div class="task-info"><h4>Referral Bonus!</h4><p>You earned 500 Points from a referral</p></div>
+        </div>
+    </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== LOCAL STORAGE KEYS =====
+const LS_DEVICE_ID = 'dt_device_id';
+const LS_USER_DATA = 'dt_user_data';
+const LS_USERS = 'dt_users';
+const LS_TRANSACTIONS = 'dt_transactions';
+const LS_WITHDRAWALS = 'dt_withdrawals';
+const LS_POINTS = 'dt_points';
+const LS_ADS_WATCHED_TODAY = 'dt_ads_watched_today';
+const LS_LAST_AD_DATE = 'dt_last_ad_date';
+const LS_QUIZ_DONE = 'dt_quiz_done';
+const LS_ARTICLE_READ = 'dt_article_read';
+const LS_RATE_DONE = 'dt_rate_done';
+const LS_GAME_SCORE = 'dt_game_score';
+
+// ===== POINT RATE =====
+const POINT_TO_RUPEE = 1000;
+const POINT_VALUE = 50 / 1000;
+const MAX_ADS_PER_DAY = 4;
+const INTERSTITIAL_INTERVAL = 5 * 60 * 1000;
+
+// ===== QUIZ DATA =====
+const quizQuestions = [
+    { q: "What is the powerhouse of the cell?", options: ["Nucleus", "Mitochondria", "Ribosome", "Golgi body"], correct: 1 },
+    { q: "Which gas do plants absorb during photosynthesis?", options: ["Oxygen", "Carbon Dioxide", "Nitrogen", "Hydrogen"], correct: 1 },
+    { q: "What is the chemical formula of water?", options: ["CO2", "H2O", "NaCl", "O2"], correct: 1 },
+    { q: "How many bones are in the adult human body?", options: ["106", "206", "306", "256"], correct: 1 },
+    { q: "What is the largest organ in the human body?", options: ["Heart", "Liver", "Skin", "Brain"], correct: 2 },
+    { q: "Which blood type is the universal donor?", options: ["A+", "B+", "AB+", "O-"], correct: 3 },
+    { q: "What is the speed of light?", options: ["300,000 km/s", "150,000 km/s", "500,000 km/s", "100,000 km/s"], correct: 0 },
+    { q: "Which planet is known as the Red Planet?", options: ["Venus", "Mars", "Jupiter", "Saturn"], correct: 1 },
+    { q: "What is the smallest unit of matter?", options: ["Atom", "Molecule", "Cell", "Electron"], correct: 0 },
+    { q: "Which force keeps planets in orbit?", options: ["Magnetic", "Gravity", "Friction", "Nuclear"], correct: 1 },
+    { q: "What is the pH of pure water?", options: ["5", "7", "9", "11"], correct: 1 },
+    { q: "Which element has the chemical symbol 'Fe'?", options: ["Fluorine", "Iron", "Francium", "Fermium"], correct: 1 },
+    { q: "What is the main function of red blood cells?", options: ["Fight infection", "Carry oxygen", "Clot blood", "Produce antibodies"], correct: 1 },
+    { q: "Which part of the brain controls balance?", options: ["Cerebrum", "Cerebellum", "Medulla", "Thalamus"], correct: 1 },
+    { q: "What is the process of cell division called?", options: ["Photosynthesis", "Mitosis", "Respiration", "Digestion"], correct: 1 },
+    { q: "Which vitamin is produced when skin is exposed to sunlight?", options: ["Vitamin A", "Vitamin B", "Vitamin C", "Vitamin D"], correct: 3 },
+    { q: "What is the hardest natural substance on Earth?", options: ["Gold", "Iron", "Diamond", "Platinum"], correct: 2 },
+    { q: "Which gas makes up about 78% of Earth's atmosphere?", options: ["Oxygen", "Carbon Dioxide", "Nitrogen", "Hydrogen"], correct: 2 },
+    { q: "What is the study of fossils called?", options: ["Biology", "Paleontology", "Geology", "Archaeology"], correct: 1 },
+    { q: "Which organ produces insulin?", options: ["Liver", "Pancreas", "Kidney", "Stomach"], correct: 1 }
+];
+
+// ===== DEVICE ID =====
+function getDeviceId() {
+    let id = localStorage.getItem(LS_DEVICE_ID);
+    if (!id) {
+        id = 'DEV_' + Date.now() + '_' + Math.random().toString(36).substring(2, 8);
+        localStorage.setItem(LS_DEVICE_ID, id);
+    }
+    return id;
+}
+
+// ===== INIT =====
+function initData() {
+    if (!localStorage.getItem(LS_USERS)) localStorage.setItem(LS_USERS, '[]');
+    if (!localStorage.getItem(LS_TRANSACTIONS)) localStorage.setItem(LS_TRANSACTIONS, '[]');
+    if (!localStorage.getItem(LS_WITHDRAWALS)) localStorage.setItem(LS_WITHDRAWALS, '[]');
+    if (!localStorage.getItem(LS_POINTS)) localStorage.setItem(LS_POINTS, '0');
+    if (!localStorage.getItem(LS_ADS_WATCHED_TODAY)) localStorage.setItem(LS_ADS_WATCHED_TODAY, '0');
+    if (!localStorage.getItem(LS_LAST_AD_DATE)) localStorage.setItem(LS_LAST_AD_DATE, '');
+}
+
+function getUsers() { return JSON.parse(localStorage.getItem(LS_USERS) || '[]'); }
+function setUsers(users) { localStorage.setItem(LS_USERS, JSON.stringify(users)); }
+function getTransactions() { return JSON.parse(localStorage.getItem(LS_TRANSACTIONS) || '[]'); }
+function setTransactions(t) { localStorage.setItem(LS_TRANSACTIONS, JSON.stringify(t)); }
+function getWithdrawals() { return JSON.parse(localStorage.getItem(LS_WITHDRAWALS) || '[]'); }
+function setWithdrawals(w) { localStorage.setItem(LS_WITHDRAWALS, JSON.stringify(w)); }
+function getUserData() { return JSON.parse(localStorage.getItem(LS_USER_DATA) || 'null'); }
+function setUserData(u) { localStorage.setItem(LS_USER_DATA, JSON.stringify(u)); }
+function getPoints() { return parseInt(localStorage.getItem(LS_POINTS) || '0'); }
+function setPoints(p) { localStorage.setItem(LS_POINTS, p.toString()); }
+
+function getAdsWatchedToday() {
+    const lastDate = localStorage.getItem(LS_LAST_AD_DATE);
+    const today = new Date().toDateString();
+    if (lastDate !== today) {
+        localStorage.setItem(LS_ADS_WATCHED_TODAY, '0');
+        localStorage.setItem(LS_LAST_AD_DATE, today);
+        return 0;
+    }
+    return parseInt(localStorage.getItem(LS_ADS_WATCHED_TODAY) || '0');
+}
+
+function incrementAdsWatched() {
+    const count = getAdsWatchedToday() + 1;
+    localStorage.setItem(LS_ADS_WATCHED_TODAY, count.toString());
+    localStorage.setItem(LS_LAST_AD_DATE, new Date().toDateString());
+    return count;
+}
+
+// ===== SETUP =====
+let setupData = { country: '', countryCode: '', language: '', name: '', phone: '' };
+let currentUser = null;
+let withdrawMethod = 'easypaisa';
+let quizCurrent = 0;
+let quizScore = 0;
+let quizAnswered = false;
+
+function showSplash() {
+    setTimeout(() => {
+        document.getElementById('splashScreen').classList.add('fade-out');
+        setTimeout(() => {
+            document.getElementById('splashScreen').classList.add('hidden');
+            checkSetup();
+        }, 500);
+    }, 2000);
+}
+
+function checkSetup() {
+    const userData = getUserData();
+    const deviceId = getDeviceId();
+    if (userData && userData.deviceId === deviceId) {
+        currentUser = userData;
+        showMainApp();
+    } else {
+        const users = getUsers();
+        const existingUser = users.find(u => u.deviceId === deviceId);
+        if (existingUser) {
+            currentUser = existingUser;
+            setUserData(existingUser);
+            showMainApp();
+            showToast('Welcome back, ' + existingUser.name + '!');
+        } else {
+            showSetupCountry();
+        }
+    }
+}
+
+function showSetupCountry() {
+    document.getElementById('setupCountry').classList.remove('hidden');
+}
+
+function selectCountry(el, name, code) {
+    setupData.country = name;
+    setupData.countryCode = code;
+    document.querySelectorAll('.country-card').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+    setTimeout(() => {
+        document.getElementById('setupCountry').classList.add('hidden');
+        document.getElementById('setupLanguage').classList.remove('hidden');
+    }, 300);
+}
+
+function selectLanguage(el, name, code) {
+    setupData.language = name;
+    document.querySelectorAll('.lang-card').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+    setTimeout(() => {
+        document.getElementById('setupLanguage').classList.add('hidden');
+        document.getElementById('setupName').classList.remove('hidden');
+    }, 300);
+}
+
+const nameInput = document.getElementById('userNameInput');
+const phoneInput = document.getElementById('userPhoneInput');
+if (nameInput) {
+    nameInput.addEventListener('input', validateInputs);
+}
+if (phoneInput) {
+    phoneInput.addEventListener('input', validateInputs);
+}
+
+function validateInputs() {
+    const name = document.getElementById('userNameInput').value.trim();
+    const phone = document.getElementById('userPhoneInput').value.trim();
+    document.getElementById('nameBtn').disabled = name.length < 2 || phone.length < 7;
+}
+
+function saveUserName() {
+    const name = document.getElementById('userNameInput').value.trim();
+    const phone = document.getElementById('userPhoneInput').value.trim();
+    if (!name || name.length < 2) { showToast('Enter a valid name!'); return; }
+    if (!phone || phone.length < 7) { showToast('Enter a valid phone number!'); return; }
+    const users = getUsers();
+    const existingName = users.find(u => u.name.toLowerCase() === name.toLowerCase());
+    const deviceId = getDeviceId();
+    if (existingName && existingName.deviceId !== deviceId) {
+        showToast('This name is already taken!'); return;
+    }
+    setupData.name = name;
+    setupData.phone = phone;
+    const userData = {
+        name: name, phone: phone, country: setupData.country, countryCode: setupData.countryCode,
+        language: setupData.language, deviceId: deviceId,
+        balance: 0, points: 0, tasks: 0, referrals: 0, earned: 0,
+        joinDate: new Date().toISOString().split('T')[0]
+    };
+    if (!existingName) { users.push(userData); setUsers(users); }
+    currentUser = userData;
+    setUserData(userData);
+    document.getElementById('setupName').classList.add('hidden');
+    showMainApp();
+    showToast('Welcome, ' + name + '!');
+}
+
+function showMainApp() {
+    document.getElementById('mainApp').classList.remove('hidden');
+    updateUI();
+    initScratchCard();
+    startInterstitialTimer();
+}
+
+// ===== UI UPDATE =====
+function updateUI() {
+    if (!currentUser) return;
+    const points = getPoints();
+    const rupees = (points * POINT_VALUE).toFixed(2);
+    document.getElementById('userBalance').textContent = rupees;
+    document.getElementById('profileName').textContent = currentUser.name;
+    document.getElementById('profilePhone').textContent = currentUser.phone || '+92-300-XXXXXXX';
+    document.getElementById('profileTasks').textContent = currentUser.tasks || 0;
+    document.getElementById('profileReferrals').textContent = currentUser.referrals || 0;
+    document.getElementById('profileEarned').textContent = (currentUser.earned || 0).toFixed(2);
+    document.getElementById('inviteCount').textContent = currentUser.referrals || 0;
+    document.getElementById('inviteEarnings').textContent = (currentUser.referrals || 0) * 500;
+    const refCode = 'PKR' + currentUser.name.substring(0, 4).toUpperCase() + '2024';
+    const refCodeEl = document.getElementById('referralCode');
+    if (refCodeEl) refCodeEl.textContent = refCode;
+    const fullLinkEl = document.getElementById('fullReferralLink');
+    if (fullLinkEl) fullLinkEl.textContent = window.location.origin + window.location.pathname + '?ref=' + refCode;
+    document.getElementById('settingCountry').textContent = currentUser.country;
+    document.getElementById('settingLanguage').textContent = currentUser.language;
+    const adsWatched = getAdsWatchedToday();
+    const adsLeft = Math.max(0, MAX_ADS_PER_DAY - adsWatched);
+    const adsLeftEl = document.getElementById('adsLeftToday');
+    if (adsLeftEl) adsLeftEl.textContent = 'Ads left today: ' + adsLeft + '/' + MAX_ADS_PER_DAY;
+}
+
+// ===== PAGE NAVIGATION =====
+function showPage(pageId) {
+    document.querySelectorAll('#mainApp .page').forEach(p => p.classList.remove('active'));
+    const target = document.getElementById(pageId);
+    if (target) target.classList.add('active');
+    document.querySelectorAll('.bottom-nav a').forEach(a => a.classList.remove('active'));
+    const navMap = { 'pageHome': 0, 'pageEarn': 1, 'pageInvite': 2, 'pageProfile': 3 };
+    if (navMap[pageId] !== undefined) {
+        document.querySelectorAll('.bottom-nav a')[navMap[pageId]].classList.add('active');
+    }
+    window.scrollTo(0, 0);
+    if (pageId === 'pageQuiz') { resetQuiz(); }
+    return false;
+}
+
+// ===== SCRATCH CARD =====
+let scratchRevealed = false;
+function initScratchCard() {
+    const canvas = document.getElementById('scratchCanvasBig');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = '#c0c0c0';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = '#a0a0a0';
+    for (let i = 0; i < 20; i++) {
+        ctx.fillRect(Math.random() * canvas.width, Math.random() * canvas.height, 30, 30);
+    }
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 20px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('SCRATCH HERE', canvas.width / 2, canvas.height / 2);
+    scratchRevealed = false;
+    let isScratching = false;
+    function scratch(e) {
+        if (scratchRevealed) return;
+        const rect = canvas.getBoundingClientRect();
+        const clientX = e.clientX || (e.touches && e.touches[0] ? e.touches[0].clientX : 0);
+        const clientY = e.clientY || (e.touches && e.touches[0] ? e.touches[0].clientY : 0);
+        const x = clientX - rect.left;
+        const y = clientY - rect.top;
+        ctx.globalCompositeOperation = 'destination-out';
+        ctx.beginPath();
+        ctx.arc(x, y, 30, 0, 2 * Math.PI);
+        ctx.fill();
+        checkScratchProgress();
+    }
+    canvas.addEventListener('mousedown', () => isScratching = true);
+    canvas.addEventListener('mouseup', () => isScratching = false);
+    canvas.addEventListener('mousemove', (e) => { if (isScratching) scratch(e); });
+    canvas.addEventListener('touchstart', (e) => { isScratching = true; e.preventDefault(); });
+    canvas.addEventListener('touchend', () => isScratching = false);
+    canvas.addEventListener('touchmove', (e) => { e.preventDefault(); if (isScratching) scratch(e); });
+}
+
+function checkScratchProgress() {
+    const canvas = document.getElementById('scratchCanvasBig');
+    const ctx = canvas.getContext('2d');
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    let transparent = 0;
+    for (let i = 3; i < imageData.data.length; i += 4) {
+        if (imageData.data[i] === 0) transparent++;
+    }
+    const percent = (transparent / (canvas.width * canvas.height)) * 100;
+    if (percent > 40 && !scratchRevealed) {
+        scratchRevealed = true;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        const prizes = [20, 30, 50];
+        const prize = prizes[Math.floor(Math.random() * prizes.length)];
+        document.getElementById('scratchPrizeAmount').textContent = prize + ' Points';
+        addPoints(prize);
+        showToast('You won ' + prize + ' Points!');
+    }
+}
+
+function resetScratchCard() {
+    scratchRevealed = false;
+    const prizes = [20, 30, 50];
+    const prize = prizes[Math.floor(Math.random() * prizes.length)];
+    document.getElementById('scratchPrizeAmount').textContent = prize + ' Points';
+    initScratchCard();
+}
+
+// ===== AD WATCHING =====
+function watchAdWithTimer(seconds, points) {
+    const adsWatched = getAdsWatchedToday();
+    if (adsWatched >= MAX_ADS_PER_DAY) {
+        showToast('You have watched all 4 ads for today! Come back tomorrow.');
+        return;
+    }
+    const overlay = document.getElementById('adWatchOverlay');
+    const progressBar = document.getElementById('adProgressBar');
+    const timerText = document.getElementById('adTimerText');
+    const rewardText = document.getElementById('adRewardText');
+    const title = document.getElementById('adWatchTitle');
+    const desc = document.getElementById('adWatchDesc');
+    title.textContent = 'Watching ' + seconds + 's Ad...';
+    desc.textContent = 'Please wait while the ad plays (' + (adsWatched + 1) + '/' + MAX_ADS_PER_DAY + ')';
+    rewardText.textContent = '+' + points + ' Points';
+    overlay.classList.add('active');
+    let elapsed = 0;
+    const interval = setInterval(() => {
+        elapsed++;
+        const pct = (elapsed / seconds) * 100;
+        progressBar.style.width = pct + '%';
+        timerText.textContent = elapsed + 's / ' + seconds + 's';
+        if (elapsed >= seconds) {
+            clearInterval(interval);
+            overlay.classList.remove('active');
+            addPoints(points);
+            incrementAdsWatched();
+            updateUI();
+            showToast('+' + points + ' Points added! (' + getAdsWatchedToday() + '/' + MAX_ADS_PER_DAY + ' ads)');
+        }
+    }, 1000);
+}
+
+// ===== INTERSTITIAL ADS =====
+let interstitialTimer = null;
+function startInterstitialTimer() {
+    interstitialTimer = setInterval(() => {
+        showInterstitial();
+    }, INTERSTITIAL_INTERVAL);
+}
+
+function showInterstitial() {
+    const adsWatched = getAdsWatchedToday();
+    if (adsWatched >= MAX_ADS_PER_DAY) return;
+    const ad = document.getElementById('interstitialAd');
+    const timer = document.getElementById('interTimer');
+    const skipTimer = document.getElementById('interSkipTimer');
+    const skipBtn = document.getElementById('interSkipBtn');
+    ad.classList.add('active');
+    let count = 5;
+    timer.textContent = count;
+    skipTimer.textContent = count;
+    skipBtn.disabled = true;
+    const interval = setInterval(() => {
+        count--;
+        timer.textContent = count;
+        skipTimer.textContent = count;
+        if (count <= 0) {
+            clearInterval(interval);
+            skipBtn.disabled = false;
+            skipBtn.textContent = 'Skip Ad';
+        }
+    }, 1000);
+}
+
+function closeInterstitial() {
+    document.getElementById('interstitialAd').classList.remove('active');
+}
+
+// ===== POINTS SYSTEM =====
+function addPoints(amount) {
+    const current = getPoints();
+    const newTotal = current + amount;
+    setPoints(newTotal);
+    if (currentUser) {
+        currentUser.points = newTotal;
+        currentUser.earned = newTotal * POINT_VALUE;
+        const users = getUsers();
+        const idx = users.findIndex(u => u.deviceId === currentUser.deviceId);
+        if (idx >= 0) users[idx] = currentUser;
+        setUsers(users);
+        setUserData(currentUser);
+    }
+    updateUI();
+}
+
+// ===== TASKS =====
+function doTask(type, points) {
+    if (!currentUser) return;
+    addPoints(points);
+    currentUser.tasks = (currentUser.tasks || 0) + 1;
+    const transactions = getTransactions();
+    transactions.unshift({
+        user: currentUser.name, userId: currentUser.deviceId,
+        type: 'earn', title: type.charAt(0).toUpperCase() + type.slice(1),
+        amount: points, time: new Date().toLocaleString()
+    });
+    setTransactions(transactions);
+    showToast('+' + points + ' Points added!');
+}
+
+function claimDailyBonus() {
+    addPoints(20);
+    showToast('Daily bonus: +20 Points!');
+}
+
+// ===== QUIZ SYSTEM =====
+function resetQuiz() {
+    quizCurrent = 0;
+    quizScore = 0;
+    quizAnswered = false;
+    document.getElementById('quizContainer').classList.remove('hidden');
+    document.getElementById('quizResultContainer').classList.add('hidden');
+    showQuizQuestion();
+}
+
+function showQuizQuestion() {
+    if (quizCurrent >= quizQuestions.length) {
+        showQuizResult();
+        return;
+    }
+    const q = quizQuestions[quizCurrent];
+    document.getElementById('quizQuestionNum').textContent = 'Question ' + (quizCurrent + 1) + ' / 20';
+    document.getElementById('quizQuestion').textContent = q.q;
+    const pct = ((quizCurrent) / quizQuestions.length) * 100;
+    document.getElementById('quizProgressBar').style.width = pct + '%';
+    const optsDiv = document.getElementById('quizOptions');
+    optsDiv.innerHTML = '';
+    q.options.forEach((opt, idx) => {
+        const div = document.createElement('div');
+        div.className = 'quiz-option';
+        div.textContent = opt;
+        div.onclick = () => answerQuiz(idx);
+        optsDiv.appendChild(div);
+    });
+    quizAnswered = false;
+}
+
+function answerQuiz(selectedIdx) {
+    if (quizAnswered) return;
+    quizAnswered = true;
+    const q = quizQuestions[quizCurrent];
+    const opts = document.querySelectorAll('.quiz-option');
+    opts.forEach((opt, idx) => {
+        opt.classList.add('disabled');
+        if (idx === q.correct) opt.classList.add('correct');
+        else if (idx === selectedIdx) opt.classList.add('wrong');
+    });
+    if (selectedIdx === q.correct) quizScore++;
+    setTimeout(() => {
+        quizCurrent++;
+        showQuizQuestion();
+    }, 1000);
+}
+
+function showQuizResult() {
+    document.getElementById('quizContainer').classList.add('hidden');
+    document.getElementById('quizResultContainer').classList.remove('hidden');
+    document.getElementById('quizScoreText').textContent = 'You scored ' + quizScore + '/20';
+    if (quizScore >= 10) {
+        showToast('Quiz completed! Watch ad to claim 100 points!');
+        setTimeout(() => {
+            watchAdWithTimer(30, 100);
+        }, 1500);
+    } else {
+        showToast('You need at least 10 correct answers to earn points!');
+    }
+}
+
+// ===== ARTICLE SYSTEM =====
+function readArticle() {
+    const today = new Date().toDateString();
+    const lastRead = localStorage.getItem(LS_ARTICLE_READ);
+    if (lastRead === today) {
+        showToast('You already read article today!');
+        return;
+    }
+    localStorage.setItem(LS_ARTICLE_READ, today);
+    addPoints(100);
+    const transactions = getTransactions();
+    transactions.unshift({
+        user: currentUser.name, userId: currentUser.deviceId,
+        type: 'earn', title: 'Read Article',
+        amount: 100, time: new Date().toLocaleString()
+    });
+    setTransactions(transactions);
+    showToast('+100 Points for reading article!');
+    document.getElementById('articleReadBtn').textContent = 'Already Claimed Today';
+    document.getElementById('articleReadBtn').disabled = true;
+    document.getElementById('articleReadBtn').style.opacity = '0.5';
+}
+
+// ===== RATE APP SYSTEM =====
+let ratedStars = 0;
+function rateStar(n) {
+    ratedStars = n;
+    const stars = document.querySelectorAll('#rateStars .star');
+    stars.forEach((s, i) => {
+        if (i < n) s.classList.add('active');
+        else s.classList.remove('active');
+    });
+    if (n === 5) {
+        const today = new Date().toDateString();
+        const lastRate = localStorage.getItem(LS_RATE_DONE);
+        if (lastRate !== today) {
+            localStorage.setItem(LS_RATE_DONE, today);
+            addPoints(20);
+            showToast('+20 Points for 5-star rating!');
+        }
+    }
+}
+
+function installApp(appName, points) {
+    const key = 'dt_install_' + appName;
+    const installed = localStorage.getItem(key);
+    if (installed) {
+        showToast('You already installed this app!');
+        return;
+    }
+    localStorage.setItem(key, 'true');
+    addPoints(points);
+    showToast('+' + points + ' Points for installing ' + appName + ' app!');
+    event.target.textContent = 'Installed';
+    event.target.disabled = true;
+    event.target.style.opacity = '0.5';
+}
+
+// ===== WITHDRAW =====
+function openWithdraw() {
+    openModal('withdrawModal');
+}
+
+function selectMethod(el, method) {
+    document.querySelectorAll('.withdraw-method-btn').forEach(b => b.classList.remove('active'));
+    el.classList.add('active');
+    withdrawMethod = method;
+}
+
+function submitWithdraw() {
+    const amount = parseFloat(document.getElementById('withdrawAmount').value);
+    const account = document.getElementById('withdrawAccount').value.trim();
+    const accName = document.getElementById('withdrawAccountName').value.trim();
+    const points = getPoints();
+    const maxRupees = points * POINT_VALUE;
+    if (!amount || amount <= 0) { showToast('Enter valid amount!'); return; }
+    if (amount < 100) { showToast('Minimum withdrawal is Rs 100!'); return; }
+    if (amount > maxRupees) { showToast('Insufficient balance! You have Rs ' + maxRupees.toFixed(2)); return; }
+    if (!account) { showToast('Enter account number!'); return; }
+    if (!accName) { showToast('Enter account name!'); return; }
+    const pointsNeeded = Math.ceil(amount / POINT_VALUE);
+    const newPoints = points - pointsNeeded;
+    setPoints(newPoints);
+    if (currentUser) {
+        currentUser.points = newPoints;
+        currentUser.balance = newPoints * POINT_VALUE;
+        const users = getUsers();
+        const idx = users.findIndex(u => u.deviceId === currentUser.deviceId);
+        if (idx >= 0) users[idx] = currentUser;
+        setUsers(users);
+        setUserData(currentUser);
+    }
+    const transactions = getTransactions();
+    transactions.unshift({
+        user: currentUser.name, userId: currentUser.deviceId,
+        type: 'withdraw', title: 'Withdrawal (' + withdrawMethod + ')',
+        amount: amount, time: new Date().toLocaleString()
+    });
+    setTransactions(transactions);
+    const withdrawals = getWithdrawals();
+    withdrawals.unshift({
+        name: currentUser.name, userId: currentUser.deviceId, phone: currentUser.phone,
+        amount: amount, method: withdrawMethod,
+        account: account, accountName: accName, status: 'Pending',
+        time: new Date().toLocaleString()
+    });
+    setWithdrawals(withdrawals);
+    updateUI();
+    closeModal('withdrawModal');
+    document.getElementById('withdrawAmount').value = '';
+    document.getElementById('withdrawAccount').value = '';
+    document.getElementById('withdrawAccountName').value = '';
+    showToast('Withdrawal request submitted!');
+}
+
+// ===== HISTORY =====
+function openHistory() {
+    const list = document.getElementById('historyList');
+    const transactions = getTransactions().filter(t => t.userId === currentUser.deviceId);
+    if (transactions.length === 0) {
+        list.innerHTML = '<div style="text-align:center;padding:30px;color:var(--gray);">No transactions yet</div>';
+    } else {
+        list.innerHTML = transactions.slice(0, 30).map(t => {
+            const isEarn = t.type === 'earn';
+            return `<div class="task-item">
+                <div class="task-icon" style="background:${isEarn?'rgba(16,185,129,0.15)':'rgba(239,68,68,0.15)'};color:${isEarn?'#10b981':'#ef4444'};">
+                    <i class="fas fa-${isEarn?'plus':'minus'}"></i>
+                </div>
+                <div class="task-info"><h4>${t.title}</h4><p>${t.time}</p></div>
+                <div class="task-reward" style="color:${isEarn?'#10b981':'#ef4444'};">${isEarn?'+':'-'}${t.amount} Pts</div>
+            </div>`;
+        }).join('');
+    }
+    openModal('historyModal');
+}
+
+// ===== INVITE FUNCTIONS =====
+function copyReferralCode() {
+    const code = document.getElementById('referralCode').textContent;
+    navigator.clipboard.writeText(code).then(() => showToast('Code copied!')).catch(() => showToast('Code: ' + code));
+}
+
+function copyReferralLink() {
+    const link = document.getElementById('fullReferralLink').textContent;
+    navigator.clipboard.writeText(link).then(() => showToast('Full link copied!')).catch(() => showToast('Link: ' + link));
+}
+
+function shareVia(platform) {
+    const link = document.getElementById('fullReferralLink').textContent;
+    const code = document.getElementById('referralCode').textContent;
+    const text = 'Join Daily Task Earn Rewards and earn real rewards! Use my referral code: ' + code + ' or link: ' + link;
+    let url = '';
+    if (platform === 'whatsapp') url = 'https://wa.me/?text=' + encodeURIComponent(text);
+    else if (platform === 'facebook') url = 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(link) + '&quote=' + encodeURIComponent(text);
+    else if (platform === 'telegram') url = 'https://t.me/share/url?url=' + encodeURIComponent(link) + '&text=' + encodeURIComponent(text);
+    else if (platform === 'twitter') url = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(text);
+    else if (platform === 'instagram') { showToast('Copy link and share on Instagram!'); copyReferralLink(); return; }
+    else if (platform === 'sms') url = 'sms:?body=' + encodeURIComponent(text);
+    else if (platform === 'email') url = 'mailto:?subject=Join Daily Task Earn Rewards&body=' + encodeURIComponent(text);
+    else if (platform === 'copy') { copyReferralLink(); return; }
+    if (url) window.open(url, '_blank');
+    showToast('Sharing via ' + platform + '...');
+}
+
+// ===== NOTIFICATIONS =====
+function openNotifications() {
+    document.getElementById('notifBadge').style.display = 'none';
+    openModal('notifModal');
+}
+
+// ===== SETTINGS =====
+let soundOn = true, notifOn = true;
+function toggleSound() {
+    soundOn = !soundOn;
+    const el = document.getElementById('soundToggle');
+    el.className = soundOn ? 'fas fa-toggle-on' : 'fas fa-toggle-off';
+    el.style.color = soundOn ? 'var(--primary)' : 'var(--gray)';
+    showToast('Sound ' + (soundOn ? 'ON' : 'OFF'));
+}
+function toggleNotif() {
+    notifOn = !notifOn;
+    const el = document.getElementById('notifToggle');
+    el.className = notifOn ? 'fas fa-toggle-on' : 'fas fa-toggle-off';
+    el.style.color = notifOn ? 'var(--primary)' : 'var(--gray)';
+    showToast('Notifications ' + (notifOn ? 'ON' : 'OFF'));
+}
+function clearAppData() {
+    if (confirm('WARNING: This will delete all your data! Continue?')) {
+        localStorage.removeItem(LS_USER_DATA);
+        showToast('Data cleared! Restarting...');
+        setTimeout(() => location.reload(), 1500);
+    }
+}
+
+// ===== MODALS =====
+function openModal(id) {
+    document.getElementById(id).classList.add('active');
+    const overlay = document.getElementById(id + 'Overlay');
+    if (overlay) overlay.classList.add('active');
+}
+function closeModal(id) {
+    document.getElementById(id).classList.remove('active');
+    const overlay = document.getElementById(id + 'Overlay');
+    if (overlay) overlay.classList.remove('active');
+}
+
+// ===== TOAST =====
+function showToast(message) {
+    const toast = document.getElementById('toast');
+    toast.textContent = message;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 3000);
+}
+
+// ===== CHECK URL PARAMS FOR REFERRAL =====
+function checkReferral() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const ref = urlParams.get('ref');
+    if (ref && currentUser) {
+        const key = 'dt_ref_' + ref + '_' + currentUser.deviceId;
+        if (!localStorage.getItem(key)) {
+            localStorage.setItem(key, 'true');
+            addPoints(100);
+            showToast('Welcome bonus! +100 Points for using referral link!');
+        }
+    }
+}
+
+// ===== INIT =====
+window.onload = function() {
+    initData();
+    showSplash();
+    setTimeout(() => {
+        checkReferral();
+    }, 3000);
+};
+</script>
+</body>
+</html>
